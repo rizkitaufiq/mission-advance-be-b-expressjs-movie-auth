@@ -33,7 +33,7 @@ module.exports = {
         profil: "https://ui-avatars.com/api/?name=John+Doe",
       });
 
-      const activationLink = `${process.env.BASE_URL}/api/activation/token=${token}`;
+      const activationLink = `${process.env.BASE_URL}/api/activation?token=${token}`;
       const mailOptions = {
         from: process.env.SMTP_USER,
         to: email,

@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-module.exports = (req, res, next) => {
+
+exports.verifyToken = (req, res, next) => {
   const token = req.headers["authorization"];
+
   if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied no token provided !" });
+    return res.status(403).json({ message: "Token is required" });
   }
 
   try {
@@ -13,6 +13,6 @@ module.exports = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(400).json({ message: "Invalid token" });
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 };

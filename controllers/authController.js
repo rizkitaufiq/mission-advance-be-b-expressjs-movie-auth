@@ -79,4 +79,47 @@ module.exports = {
       next(error);
     }
   },
+
+  login: async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(400).json({ message: "Email not registered" });
+      }
+
+      if (user.status !== "active") {
+        return res.status(400).json({
+          message: "Account is not activated. Please activate your account",
+        });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+
+      const token = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES }
+      );
+
+      res.status(200).json({
+        message: "Login successful !",
+        token,
+        user: {
+          id: user.id,
+          fullname: user.fullname,
+          email: user.email,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

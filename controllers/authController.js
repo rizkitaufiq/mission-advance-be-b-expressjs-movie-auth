@@ -21,9 +21,9 @@ module.exports = {
   register: async (req, res, next) => {
     try {
       const { fullname, username, email, password } = req.body;
-      const hashedPassword = await bcrypt.hashSync(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const token = uuidv4();
-      const user = await User.create({
+      await User.create({
         fullname,
         username,
         email,
@@ -95,7 +95,7 @@ module.exports = {
         });
       }
 
-      const isPasswordValid = await bcrypt.compareSync(password, user.password);
+      const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid password" });
       }

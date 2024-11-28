@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       password: { type: DataTypes.STRING, allowNull: false },
       status: { type: DataTypes.STRING, defaultValue: false },
       token: { type: DataTypes.UUID, defaultValue: uuidv4 },
-      profil: { type: DataTypes.STRING, allowNull: false },
+      profil: { type: DataTypes.STRING },
     },
     {
       sequelize,

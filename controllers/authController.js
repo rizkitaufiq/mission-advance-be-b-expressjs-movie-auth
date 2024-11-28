@@ -106,7 +106,7 @@ module.exports = {
           email: user.email,
         },
         process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES }
+        { expiresIn: "1h" }
       );
 
       res.status(200).json({
@@ -117,6 +117,29 @@ module.exports = {
           fullname: user.fullname,
           email: user.email,
         },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  upload: async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded." });
+      }
+
+      const filePath = req.file.path;
+      console.log("File Path:", filePath);
+
+      const user = await User.findOne({ where: { id: req.user.id } });
+
+      user.profil = req.file.filename;
+      await user.save();
+
+      res.status(200).json({
+        message: "Profile picture uploaded and updated successfully.",
+        filePath,
       });
     } catch (error) {
       next(error);

@@ -43,7 +43,7 @@ module.exports = {
         <a href="${activationLink}">${activationLink}</a>`,
       };
 
-      const mailerinfo = await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
 
       res.status(201).json({
         message:
@@ -106,7 +106,7 @@ module.exports = {
           email: user.email,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: process.env.JWT_EXPIRES }
       );
 
       res.status(200).json({
